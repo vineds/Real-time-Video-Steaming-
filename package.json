@@ -46,5 +46,9 @@
     "grunt-contrib-uglify": "0.11.0",
     "grunt-jsbeautifier": "0.2.10",
     "load-grunt-tasks": "3.4.0"
+  },
+  "dependencies": {
+    "formidable": "^1.2.1",
+    "sqlite3": "^4.0.0"
   }
 }

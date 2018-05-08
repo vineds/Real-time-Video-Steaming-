@@ -1,0 +1,223 @@
+<html>
+    <head>
+        <title>ICE MIST </title>
+        <meta name="Author" content="Reshma ">
+        <meta name="description" content="Cool Bar">
+        <meta charset="utf-8">
+  
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="mystyle.css">      
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <style>
+    #bg {
+        background-color:antiquewhite;
+    }
+
+    .table th,
+    .table td {
+        border-top: none !important;
+    }
+</style>
+
+      
+      <nav style="background-color:black; color:aliceblue" class="navbar navbar-default navbar-fixed-top">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              
+              <div class="home"><a href="index.html"><img  class="img-responsive"  style=width:20%; src="download.png" alt="hom" ></a></div>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="index.html"><span id="icon" class="active"></span></a></li>
+                </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="members.html">Members</a></li>
+                <li><a href="News.html">News</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        </header>
+
+        
+
+
+
+        <div class="container-fluid">
+
+             
+            
+               <br><br><br> <div ><center><img  style=width:40%; src="muffin1.jpg"  ></center></div>
+           
+                
+                   
+
+    
+              
+     
+              
+             
+             <style>
+    #bg {
+        background-color:antiquewhite;
+    }
+
+    .table th,
+    .table td {
+        border-top: none !important;
+    }
+</style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <h1 style="text-align:center">Feel free to ask questions!</h1>
+            <div>
+                <form method="post" action="/users" onsubmit="return validation()">
+                    <table class="table table-responsive table-borderless table-condensed " style="border-collapse: separate; border-spacing:5px">
+                        <tr>
+                            <td class="col-md-1" id="bg"><label for="usersname">Name</label></td>
+                            <td class="col-md-2"><input type="text" id="usersname" name="uname"></td>
+                            <td class="col-md-9"><span id="message1"></span></td>
+                        </tr>
+
+                        <tr>
+                            <td class="col-md-1" id="bg"><label for="usersemail">Email</label></td>
+                            <td class="col-md-2"><input type="text" id="usersemail" name="uemail"></td>
+                            <td class="col-md-9"><span id="message2"></span></td>
+                        </tr>
+
+                        
+                        <tr>
+                            <td class="col-md-1" id="bg"> <label for="usersphone">Phone</label></td>
+                            <td class="col-md-2"> <input type="text" id="usersphone" name="uphone"></td>
+                            <td class="col-md-9"><span id="message3"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-1" id="bg"> <label for="userspostcode">Postcode</label></td>
+                            <td class="col-md-2"> <input type="text" id="userspostcode" name="upostcode"></td>
+                            <td class="col-md-9"><span id="message4"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-1" id="bg"> <label for="usersquery">Questions</label></td>
+                            <td class="col-md-2"> <input type="text" id="usersquery" name="uquery"></td>
+                            <td class="col-md-9"><span id="message5"></span></td>
+                        </tr>
+
+                        <tr>
+                            <td> <input type="submit" value="Submit Query" class="btn btn-default"> </td>
+                        </tr>
+                    </table>
+                </form >
+                
+                
+<td>  <form method="get" action="/users">
+    <input type="submit" value="View " class="btn btn-default"> </td>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+    function validation() {
+        var email, postcode, Flag,phNumber;
+        Flag = 0;
+        email = document.getElementById("usersemail").value;
+        postcode = document.getElementById("userspostcode").value;
+        phNumber = document.getElementById("usersphone").value;
+
+
+        if (document.getElementById("usersname").value.length == 0) {
+            document.getElementById("message1").innerHTML = "<em>*Please enter name here.</em>";
+            Flag = 1;
+            return false;
+        } else {
+            Flag = 0;
+            document.getElementById("message1").innerHTML = "";
+        }
+        if (document.getElementById("usersemail").value.length == 0) {
+            document.getElementById("message2").innerHTML = "<em>*Please enter email here.</em>";
+            Flag = 1;
+            return false;
+        } else {
+            Flag = 0;
+            document.getElementById("message2").innerHTML = "";
+        }
+
+        if (email.indexOf("@gmail.com") == -1) {
+            document.getElementById("message2").innerHTML = "<em>*Your email address must contain '@gmail.com'</em>";
+            Flag = 1;
+            return false;
+        } else {
+            Flag = 0;
+            document.getElementById("message2").innerHTML = "";
+        }
+        
+       if (phNumber.length != 10) {
+            document.getElementById("message3").innerHTML = "<em>*You should enter a 10 digit phone number here.</em>";
+            Flag = 1;
+            return false;
+        } else if (isNaN(phNumber)) {
+            for (i = 0; i <= phNumber.length; i++) {
+
+                if (isNaN(phNumber[i])) {
+                    document.getElementById("message3").innerHTML = "<em>* Your Phone number contains the character: " + "'" + phNumber[i] + "'</em>";
+                    Flag = 1;
+                    return false;
+                }
+            }
+        }
+        else {
+
+            Flag = 0;
+            document.getElementById("message3").innerHTML = "";
+        }
+        if (document.getElementById("userspostcode").value.length == 0) {
+            document.getElementById("message4").innerHTML = "<em>*Please enter postcode here.</em>";
+            Flag = 1;
+            return false;
+        } else {
+            Flag = 0;
+            document.getElementById("message4").innerHTML = "";
+        }
+
+        if (postcode.length != 4) {
+            document.getElementById("message4").innerHTML = "<em>*Your postcode must be four-character long.</em>";
+            Flag = 1;
+            return false;
+        } else {
+            Flag = 0;
+            document.getElementById("message4").innerHTML = "";
+        }
+        
+if (document.getElementById("usersquery").value.length == 0) {
+            document.getElementById("message5").innerHTML = "<em>*Please enter a question here.</em>";
+            Flag = 1;
+            return false;
+        } else {
+            Flag = 0;
+            document.getElementById("message5").innerHTML = "";
+        }
+
+        if (Flag == 0)
+            return true;
+
+    }
+</script></div>
+<div class="container-fluid" style="background-color:black; color:aliceblue;"><footer > 
+                  
+           <br><center> Copyright &copy; 2017 iceMist Pty Ltd. <br>
+            icem!st@gmail.com</center><br>
+    </footer></div>
+</body>
+
+</html>

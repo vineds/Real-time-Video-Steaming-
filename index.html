@@ -2,14 +2,40 @@
 <html lang="en">
 
 <head>
-    <title>Silverpond | Real-Time Video Recording</title>
+    <title>Video Recording</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="author" content="Vineeth Damodaran">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <link rel="stylesheet" href="https://cdn.webrtc-experiment.com/style.css">
+    <link rel="stylesheet" href="./src/css/mystyle.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $(":file").change(function () {
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = imageIsLoaded;
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+
+        function imageIsLoaded(e) {
+            $('#myImg').attr('src', e.target.result);
+        };
+    </script>
+
+    <link rel="stylesheet" href="/src/css/style.css">
+
+    <script src="/src/RecordRTC.js"></script>
+
+    <script src="/src/DetectRTC.js"> </script>
+    <!-- video element -->
+    <script src="/src/getHTMLMediaElement.js"></script>
 
     <style>
         li {
@@ -56,7 +82,7 @@
 
         .recordrtc video,
         .recordrtc img {
-            max-width: 100%!important;
+            max-width: 30%!important;
             vertical-align: top;
         }
 
@@ -73,103 +99,181 @@
         }
     </style>
 
-    <script src="https://cdn.webrtc-experiment.com/RecordRTC.js"></script>
 
-    <!-- for Edge/FF/Chrome/Opera/etc. getUserMedia support -->
-    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-    <script src="https://cdn.webrtc-experiment.com/DetectRTC.js"> </script>
-
-    <!-- video element -->
-    <link href="https://cdn.webrtc-experiment.com/getHTMLMediaElement.css" rel="stylesheet">
-    <script src="https://cdn.webrtc-experiment.com/getHTMLMediaElement.js"></script>
 </head>
 
 <body>
-    <article>
-        <header style="text-align: center;">
-            <h1>
-                Silverpond | Real-Time Video Recording </a>
-            </h1>
-        </header>
-        <section class="experiment recordrtc">
-            <h2 class="header" style="margin: 0;">
-                <select class="recording-media">
-                    <option value="record-audio-plus-video">Microphone+Camera</option>
-                    <option value="record-audio">Microphone</option>
-                    <option value="record-screen">Full Screen</option>
-                    <option value="record-audio-plus-screen">Microphone+Screen</option>
-                </select>
+    <!--nav area-->
+    <nav style="background-color:teal;  color:black" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
 
-                <span style="font-size: 15px;">into</span>
-
-                <select class="media-container-format">
-                    <option>default</option>
-                    <option>vp8</option>
-                    <option>vp9</option>
-                    <option>h264</option>
-                    <option>mkv</option>
-                    <option>opus</option>
-                    <option>ogg</option>
-                    <option>pcm</option>
-                    <option>gif</option>
-                    <option>whammy</option>
-                </select>
-
-                <input type="checkbox" id="chk-timeSlice" style="margin:0;width:auto;" title="Use intervals based recording">
-                <label for="chk-timeSlice" style="font-size: 15px;margin:0;width: auto;cursor: pointer;-webkit-user-select:none;user-select:none;"
-                    title="Use intervals based recording">Use timeSlice?</label>
-
-                <br>
-
-                <button id="btn-start-recording">Start Recording</button>
-                <button id="btn-pause-recording" style="display: none; font-size: 15px;">Pause</button>
-
-                <hr style="border-top: 0;border-bottom: 1px solid rgb(189, 189, 189);margin: 4px -12px;margin-top: 8px;">
-                <select class="media-resolutions">
-                    <option value="default">Default resolutions</option>
-                    <option value="1920x1080">1080p</option>
-                    <option value="1280x720">720p</option>
-                    <option value="640x480">480p</option>
-                    <option value="3840x2160">4K Ultra HD (3840x2160)</option>
-                </select>
-
-                <select class="media-framerates">
-                    <option value="default">Default framerates</option>
-                    <option value="5">5 fps</option>
-                    <option value="15">15 fps</option>
-                    <option value="24">24 fps</option>
-                    <option value="30">30 fps</option>
-                    <option value="60">60 fps</option>
-                </select>
-
-                <select class="media-bitrates">
-                    <option value="default">Default bitrates</option>
-                    <option value="8000000000">1 GB bps</option>
-                    <option value="800000000">100 MB bps</option>
-                    <option value="8000000">1 MB bps</option>
-                    <option value="800000">100 KB bps</option>
-                    <option value="8000">1 KB bps</option>
-                    <option value="800">100 Bytes bps</option>
-                </select>
-            </h2>
-
-            <div style="text-align: center; display: none;">
-                <button id="save-to-disk">Save To Disk</button>
-                <button id="upload-to-php">Upload to PHP</button>
-                <button id="open-new-tab">Open New Tab</button>
-
-                <div style="margin-top: 10px;">
-                    <span id="signinButton" class="pre-sign-in">
-                        <span class="g-signin" data-callback="signinCallback" data-clientid="41556190767-115ifahd55lk4ln5pop4jus55cr4l7oh.apps.googleusercontent.com"
-                            data-cookiepolicy="single_host_origin" data-scope="https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube">
-                        </span>
-                    </span>
-
-                    <button id="upload-to-youtube" style="vertical-align:top;">Upload to YouTube</button>
+                <div class="home">
+                    <a href="index.html">
+                        <img class="img-responsive" style=width:20%; src="./src/images/download.png" alt="hom">
+                    </a>
                 </div>
             </div>
 
-            <div style="margin-top: 10px;" id="recording-player"></div>
+            <ul class="nav navbar-nav navbar-right">
+                <li style="border:0 !important;">
+                    <a href="index.html">
+                        <span id="icon" class="active"></span>Home</a>
+                </li>
+
+                <li style="border:0 !important;">
+                    <a href="#about">About Us</a>
+                </li>
+                <li style="border:0 !important;">
+                    <a href="#contact">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+        </div>
+    </nav>
+    </header>
+
+
+
+    <!--parallax1-->
+
+    <div class="parallax"></div>
+
+    <div style="height:300px;background-color:white;" class="container-fluid">
+        <h2 style="font-size:36px;color:teal;">
+            <center>Silverpond | Video Pond</center>
+        </h2>
+    </div>
+    <!--parallax2-->
+    <div class="parallax2"></div>
+
+    <div style="height:500px;background-color:white;" class="container-fluid">
+        <!--register space-->
+        <div class="row" >
+            <div class="container">
+
+                <div class="row center" style="margin-left: 26%">
+                    <h2 style="font-size:36px;color:teal;margin-left: 25%">Profile</h2>
+
+                    <div class="col-md-6">
+                        <form>
+                            <div class="form-group ">
+                                <input type="text" id="name1" class="form-control" name="nam1" placeholder="First name" required="required">
+                            </div>
+                            <div class="form-group ">
+                                <input type="text" id="name2" class="form-control" name="nam2" placeholder="Surname" required="required">
+                            </div>
+                            <div>
+                                <form>
+                                    <input type="radio" name="gender" value="male" checked> Male
+                                    <input type="radio" name="gender" value="female"> Female
+                                    <input type="radio" name="gender" value="other"> Other
+                                </form>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" id="contact1" class="form-control" name="con" placeholder="Mobile" required="required">
+                            </div>
+                            <div class="form-group">
+                                <input type="email" id="email" class="form-control" name="email" placeholder="Email" required="required">
+                            </div>
+
+                            <!--password
+             <div class="form-group">
+              <input type="Password" id="password" class="form-control" name="pas" placeholder="Password" required="required">
+              </div>
+              <div class="form-group">
+                  <input type="Password" id="password2" class="form-control" name="pas2" placeholder="Confirm Password" required="required">
+                  </div>-->
+                            <div>Upload your photo
+
+                                <input  type='file' />
+
+                            </div>
+
+                            <div>
+                            </div>
+
+
+                            <center>
+                                <button onclick="submitForm()" type="submit" class="btn btn-primary">Submit</button>
+                            </center>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+
+    </div>
+    </div>
+
+
+
+
+
+
+    <article>
+        <header style="text-align: center;">
+            <h2 style="font-size:36px;color:teal;text-align: center;">Record Now!</h2>
+        </header>
+        <section class="experiment recordrtc">
+            <select style="visibility: hidden" class="recording-media">
+                <option value="record-audio-plus-video">Web Camera</option>
+            </select>
+
+            <span style="font-size: 10px;visibility: hidden;">into Format:</span>
+
+            <select style="visibility: hidden" class="media-container-format">
+                <option>default</option>
+                <option>vp8</option>
+                <option>vp9</option>
+                <option>h264</option>
+                <option>mkv</option>
+            </select>
+
+            <!-- <input type="checkbox" id="chk-timeSlice" style="margin:0;width:auto;" title="Use intervals based recording">
+                <label for="chk-timeSlice" style="font-size: 15px;margin:0;width: auto;cursor: pointer;-webkit-user-select:none;user-select:none;"
+                    title="Use intervals based recording">Use timeSlice?</label>
+
+                <br> -->
+
+
+            <select style="visibility: hidden" class="media-resolutions">
+                <option value="default">Default resolutions</option>
+                <option value="1280x720">720p</option>
+                <option value="640x480">480p</option>
+            </select>
+            <hr></hr>
+            <select style="visibility: hidden" class="media-framerates">
+                <option value="default">Default framerates</option>
+                <option value="5">5 fps</option>
+                <option value="15">15 fps</option>
+                <option value="24">24 fps</option>
+                <option value="30">30 fps</option>
+                <option value="60">60 fps</option>
+            </select>
+
+            <button id="btn-start-recording">Start Recording</button>
+            <button id="btn-pause-recording" style="display: none; font-size: 15px;">Pause</button>
+
+            <select style="visibility: hidden" class="media-bitrates">
+                <option value="default">Default bitrates</option>
+                <option value="8000000">1 MB bps</option>
+                <option value="800000">100 KB bps</option>
+                <option value="8000">1 KB bps</option>
+                <option value="800">100 Bytes bps</option>
+            </select>
+
+
+            <div style="text-align: center; display: none;">
+                <button id="save-to-disk">Save To Disk</button>
+                <button id="upload-to-php">Upload to Server</button>
+            </div>
+
+            <center>
+                <div style="margin-top: 0px; text-align: center !important;" id="recording-player"></div>
+            </center>
         </section>
 
         <script>
@@ -601,7 +705,7 @@
 
                         button.recordRTC.startRecording();
                         btnPauseRecording.style.display = '';
-                        recordingPlayer.parentNode.parentNode.querySelector('h2').innerHTML = '<img src="https://cdn.webrtc-experiment.com/images/progress.gif">';
+                        recordingPlayer.parentNode.parentNode.querySelector('h2').innerHTML = '<img src="./src/images/progress.gif">';
                     };
                 }
 
@@ -731,10 +835,10 @@
                 });
             }
 
-            var MY_DOMAIN = 'webrtc-experiment.com';
+            var MY_DOMAIN = 'silverpond.com';
 
             function isMyOwnDomain() {
-                // replace "webrtc-experiment.com" with your own domain name
+
                 return document.domain.indexOf(MY_DOMAIN) !== -1;
             }
 
@@ -745,8 +849,6 @@
             }
 
             function captureScreen(config) {
-                // Firefox screen capturing addon is open-sourced here: https://github.com/muaz-khan/Firefox-Extensions
-                // Google Chrome screen capturing extension is open-sourced here: https://github.com/muaz-khan/Chrome-Extensions/tree/master/desktopCapture
 
                 window.getScreenId = function (chromeMediaSource, chromeMediaSourceId) {
                     var screenConstraints = {
@@ -780,13 +882,11 @@
 
                         if (isMyOwnDomain() === false && DetectRTC.browser.name === 'Chrome') {
                             // otherwise deploy chrome extension yourselves
-                            // https://github.com/muaz-khan/Chrome-Extensions/tree/master/desktopCapture
                             alert('Please enable this command line flag: "--enable-usermedia-screen-capturing"');
                         }
 
                         if (isMyOwnDomain() === false && DetectRTC.browser.name === 'Firefox') {
                             // otherwise deploy firefox addon yourself
-                            // https://github.com/muaz-khan/Firefox-Extensions
                             alert('Please enable screen capturing for your domain. Open "about:config" and search for "media.getusermedia.screensharing.allowed_domains"');
                         }
                     });
@@ -800,8 +900,6 @@
             }
 
             function captureAudioPlusScreen(config) {
-                // Firefox screen capturing addon is open-sourced here: https://github.com/muaz-khan/Firefox-Extensions
-                // Google Chrome screen capturing extension is open-sourced here: https://github.com/muaz-khan/Chrome-Extensions/tree/master/desktopCapture
 
                 window.getScreenId = function (chromeMediaSource, chromeMediaSourceId) {
                     var screenConstraints = {
@@ -849,13 +947,11 @@
 
                         if (isMyOwnDomain() === false && DetectRTC.browser.name === 'Chrome') {
                             // otherwise deploy chrome extension yourselves
-                            // https://github.com/muaz-khan/Chrome-Extensions/tree/master/desktopCapture
                             alert('Please enable this command line flag: "--enable-usermedia-screen-capturing"');
                         }
 
                         if (isMyOwnDomain() === false && DetectRTC.browser.name === 'Firefox') {
                             // otherwise deploy firefox addon yourself
-                            // https://github.com/muaz-khan/Firefox-Extensions
                             alert('Please enable screen capturing for your domain. Open "about:config" and search for "media.getusermedia.screensharing.allowed_domains"');
                         }
                     });
@@ -1240,23 +1336,23 @@
 
                     invokeSaveAsDialog(file, file.name);
                 };
-
-                document.querySelector('#open-new-tab').onclick = function () {
-                    if (!recordRTC) return alert('No recording found.');
-
-                    var file = new File([recordRTC.getBlob()], fileName, {
-                        type: mimeType
-                    });
-
-                    window.open(URL.createObjectURL(file));
-                };
-
+                /*
+                                document.querySelector('#open-new-tab').onclick = function () {
+                                    if (!recordRTC) return alert('No recording found.');
+                
+                                    var file = new File([recordRTC.getBlob()], fileName, {
+                                        type: mimeType
+                                    });
+                
+                                    window.open(URL.createObjectURL(file));
+                                };
+                */
                 // upload to PHP server
                 document.querySelector('#upload-to-php').disabled = false;
                 document.querySelector('#upload-to-php').onclick = function () {
                     if (!recordRTC) return alert('No recording found.');
                     this.disabled = true;
-
+                    console.log("before invoking upld");
                     var button = this;
                     uploadToPHPServer(fileName, recordRTC, function (progress, fileURL) {
                         if (progress === 'ended') {
@@ -1289,14 +1385,6 @@
                         return;
                     }
 
-                    if (isMyOwnDomain() === false) {
-                        var url = 'https://github.com/muaz-khan/RecordRTC/wiki/Upload-to-YouTube';
-                        alert('YouTube API key is configured to work only on webrtc-experiment.com. Please create your own YouTube key + oAuth client-id and use it instead.\n\nWiki page: ' + url);
-
-                        // check instructions on the wiki page
-                        location.href = url;
-                        return;
-                    }
 
                     var button = this;
                     uploadToYouTube(fileName, recordRTC, function (percentageComplete, fileURL) {
@@ -1333,31 +1421,71 @@
                     });
                 };
             }
+            //sms integrated code
+            function submitForm() {
+                var gen;
+                var radios = document.getElementsByName('gender');
+                for (var i = 0, length = radios.length; i < length; i++) {
+                    if (radios[i].checked) {
+                        // do whatever you want with the checked radio
+                        gen = radios[i].value;
 
+                        // only one radio can be logically checked, don't check the rest
+                        break;
+                    }
+                }
+
+
+
+
+                var name1 = document.getElementById('name1').value;
+                var name2 = document.getElementById('name2').value;
+                var phone = document.getElementById('contact1').value;
+                var email = document.getElementById('email').value;
+
+                var fd = new FormData();
+                fd.append('table', 'user_details');
+                fd.append('name1', name1);
+                fd.append('name2', name2);
+                fd.append('phone', phone);
+                fd.append('email', email);
+                fd.append('gender', gen);
+
+
+
+
+                // formData.append('video-blob', blob);
+                req = new XMLHttpRequest();
+
+                req.open("POST", "/", true);
+                req.send(fd);
+                console.log("Request executed sucessfully");
+            }
+
+            //code ends
             function uploadToPHPServer(fileName, recordRTC, callback) {
+                console.log("inside upload to php");
                 var blob = recordRTC instanceof Blob ? recordRTC : recordRTC.getBlob();
 
                 blob = new File([blob], getFileName(fileExtension), {
                     type: mimeType
                 });
-
+                //sms intergrated code
                 // create FormData
+                var user = document.getElementById('name1').value;
                 var formData = new FormData();
+                formData.append('table', 'user_data');
+                formData.append('user_id', user);
                 formData.append('video-filename', fileName);
                 formData.append('video-blob', blob);
 
                 callback('Uploading recorded-file to server.');
+                var r = new XMLHttpRequest();
+                r.open("POST", "/", true);
+                r.send(formData);
+                callback('uploaded recorded-file to server.');
 
-                makeXMLHttpRequest('https://webrtcweb.com/RecordRTC/', formData, function (progress) {
-                    if (progress !== 'upload-ended') {
-                        callback(progress);
-                        return;
-                    }
-
-                    var initialURL = 'https://webrtcweb.com/RecordRTC/uploads/';
-
-                    callback('ended', initialURL + fileName);
-                });
+                //code ends
             }
 
             function makeXMLHttpRequest(url, data, callback) {
@@ -1522,149 +1650,6 @@
 
                 parentNode.appendChild(recordingPlayer);
             }
-        </script>
-
-        <script>
-            /* upload_youtube_video.js Copyright 2017 Google Inc. All Rights Reserved. */
-
-            function uploadToYouTube(fileName, recordRTC, callback) {
-                var blob = recordRTC instanceof Blob ? recordRTC : recordRTC.getBlob();
-
-                blob = new File([blob], getFileName(fileExtension), {
-                    type: mimeType
-                });
-
-                if (!uploadVideo) {
-                    alert('YouTube API are not available.');
-                    return;
-                }
-
-                uploadVideo.callback = callback;
-                uploadVideo.uploadFile(fileName, blob);
-            }
-
-            var uploadVideo;
-
-            var signinCallback = function (result) {
-                if (result.access_token) {
-                    uploadVideo = new UploadVideo();
-                    uploadVideo.ready(result.access_token);
-
-                    document.querySelector('#signinButton').style.display = 'none';
-                }
-                else {
-                    // console.error('YouTube error', result);
-                    // document.querySelector('#upload-to-youtube').style.display = 'none';
-                }
-            };
-
-            var STATUS_POLLING_INTERVAL_MILLIS = 60 * 1000; // One minute.
-
-            var UploadVideo = function () {
-                this.tags = ['recordrtc'];
-                this.categoryId = 28; // via: http://stackoverflow.com/a/35877512/552182
-                this.videoId = '';
-                this.uploadStartTime = 0;
-            };
-
-
-            UploadVideo.prototype.ready = function (accessToken) {
-                this.accessToken = accessToken;
-                this.gapi = gapi;
-                this.authenticated = true;
-                false && this.gapi.client.request({
-                    path: '/youtube/v3/channels',
-                    params: {
-                        part: 'snippet',
-                        mine: true
-                    },
-                    callback: function (response) {
-                        if (!response.error) {
-                            // response.items[0].snippet.title -- channel title
-                            // response.items[0].snippet.thumbnails.default.url -- channel thumbnail
-                        }
-                    }.bind(this)
-                });
-            };
-
-            UploadVideo.prototype.uploadFile = function (fileName, file) {
-                var metadata = {
-                    snippet: {
-                        title: fileName,
-                        description: fileName,
-                        tags: this.tags,
-                        categoryId: this.categoryId
-                    },
-                    status: {
-                        privacyStatus: 'private'
-                    }
-                };
-                var uploader = new MediaUploader({
-                    baseUrl: 'https://www.googleapis.com/upload/youtube/v3/videos',
-                    file: file,
-                    token: this.accessToken,
-                    metadata: metadata,
-                    params: {
-                        part: Object.keys(metadata).join(',')
-                    },
-                    onError: function (data) {
-                        var message = data;
-                        try {
-                            var errorResponse = JSON.parse(data);
-                            message = errorResponse.error.message;
-                        } finally {
-                            alert(message);
-                        }
-                    }.bind(this),
-                    onProgress: function (data) {
-                        var bytesUploaded = data.loaded;
-                        var totalBytes = parseInt(data.total);
-                        var percentageComplete = parseInt((bytesUploaded * 100) / totalBytes);
-
-                        uploadVideo.callback(percentageComplete);
-                    }.bind(this),
-                    onComplete: function (data) {
-                        var uploadResponse = JSON.parse(data);
-                        this.videoId = uploadResponse.id;
-                        this.videoURL = 'https://www.youtube.com/watch?v=' + this.videoId;
-                        uploadVideo.callback('uploaded', this.videoURL);
-
-                        setTimeout(this.pollForVideoStatus, 2000);
-                    }.bind(this)
-                });
-                this.uploadStartTime = Date.now();
-                uploader.upload();
-            };
-
-            UploadVideo.prototype.pollForVideoStatus = function () {
-                this.gapi.client.request({
-                    path: '/youtube/v3/videos',
-                    params: {
-                        part: 'status,player',
-                        id: this.videoId
-                    },
-                    callback: function (response) {
-                        if (response.error) {
-                            uploadVideo.pollForVideoStatus();
-                        } else {
-                            var uploadStatus = response.items[0].status.uploadStatus;
-                            switch (uploadStatus) {
-                                case 'uploaded':
-                                    uploadVideo.callback('uploaded', uploadVideo.videoURL);
-                                    uploadVideo.pollForVideoStatus();
-                                    break;
-                                case 'processed':
-                                    uploadVideo.callback('processed', uploadVideo.videoURL);
-                                    break;
-                                default:
-                                    uploadVideo.callback('failed', uploadVideo.videoURL);
-                                    break;
-                            }
-                        }
-                    }.bind(this)
-                });
-            };
-
         </script>
 
         <script>
@@ -1882,7 +1867,7 @@
                     btnStartRecording.disabled = false;
                     btnStartRecording.style.fontSize = 'inherit';
                     btnStartRecording.recordRTC.resumeRecording();
-                    recordingPlayer.parentNode.parentNode.querySelector('h2').innerHTML = '<img src="https://cdn.webrtc-experiment.com/images/progress.gif">';
+                    recordingPlayer.parentNode.parentNode.querySelector('h2').innerHTML = '<img src="./images/progress.gif">';
                     recordingPlayer.play();
 
                     btnPauseRecording.style.fontSize = '15px';
@@ -1896,29 +1881,45 @@
 
     </article>
 
-    <footer>
+    <div class="parallax3"></div>
+
+    <div style="height:300px;background-color:white;font-size:36px;color:teal" class="container-fluid">
+        <!--about us-->
+        <div style=" background-color:White;">
 
 
-    </footer>
+            <div class="row">
 
-    <!-- commits.js is useless for you! -->
-    <script>
-        window.useThisGithubPath = 'muaz-khan/RecordRTC';
-    </script>
-    <script src="https://cdn.webrtc-experiment.com/commits.js" async></script>
-    <script src="https://apis.google.com/js/client:plusone.js"></script>
 
-    <!-- <script src="https://cdn.webrtc-experiment.com/getScreenId.js"></script> -->
-    <script>
-        var chromeMediaSource = 'screen';
-        window.addEventListener('message', function (message) {
-            if (message.origin.toString().indexOf(MY_DOMAIN) === -1) return;
-            chromeMediaSource = 'desktop';
-            if (typeof getScreenId == 'function' && !!message.data.sourceId) {
-                getScreenId(chromeMediaSource, message.data.sourceId);
-            }
-        });
-    </script>
+                <div class="col-md-6">
+
+
+                    <h3 id="about">
+                        <center>About Us</center>
+                    </h3>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <h3 id="contact">
+                        <center>Contact Us</center>
+                    </h3>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" style="background-color:teal; color:aliceblue; ">
+        <footer>
+
+            <br>
+            <center>Copyright &copy; 2018 Videomate. </center>
+        </footer>
+    </div>
 </body>
 
 </html>
