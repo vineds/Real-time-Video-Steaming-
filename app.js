@@ -15,10 +15,11 @@ spinner.setSpinnerString('|/-\\');
 var fs = require('fs');
 var content;
 var videourl;
-var filePath = __dirname +'/public/upload/video/tmp.mp4';
+var filePath = __dirname + '/public/upload/video/tmp.mp4';
 var imgPath = '/public/upload/image/tmp.mp4';
-var ranId ;
-const uuidv4 = require('uuid/v4');
+var ranId;
+var shortid = require('shortid');
+var mqtt = require('mqtt')
 
 
 /*****************************************************
@@ -28,6 +29,7 @@ app.use(express.static(__dirname + '/public'));
 server.listen(5000, () => {
   console.log('Video Pond app initiated! - localhost:5000');
 });
+
 
 /*****************************************************
  *                    ROUTES                         *
@@ -43,129 +45,148 @@ app.post('/upload', function (req, resp) {
     fs.appendFile(__dirname + '/public/upload/video/tmp.mp4', chunk, function (err) {
       if (err) throw err;
     });
-    });
   });
+});
 
-  /*****************************************************
-   *                    FILE OPERATION                         *
-   ****************************************************/
-  function fileReader() {
-    fs.readFile(__dirname +'/public/upload/video/tmp.mp4', function read(err, data) {
-      if (err) {
-        throw err;
-      }
-      content = data;
+/*****************************************************
+ *                    FILE OPERATION                         *
+ ****************************************************/
+function fileReader() {
+  fs.readFile(__dirname + '/public/upload/video/tmp.mp4', function read(err, data) {
+    if (err) {
+      throw err;
+    }
+    content = data;
+  });
+}
+
+function fileDelete() {
+  fs.unlinkSync(filePath)
+}
+/*****************************************************
+ *             SOCKET.IO EVENT LISTENERS            *
+ ****************************************************/
+
+let currentVideo = {};
+var data = [];
+
+io.on('connection', function (socket) {
+
+  socket.on('start', function (video) {
+
+    currentVideo = video
+    var image = currentVideo.video;
+
+    fileReader();
+    fs.writeFile(__dirname + '/public/upload/image/tmp.jpg', video, function (err) {
+      if (err) throw err;
     });
-  }
-  
-  function fileDelete() {
-    fs.unlinkSync(filePath)
-  }
-  /*****************************************************
-   *             SOCKET.IO EVENT LISTENERS            *
-   ****************************************************/
 
-  let currentVideo = {};
-  var data = [];
+    var file_values = [currentVideo.firstname, currentVideo.lastname, currentVideo.mobile, currentVideo.email, currentVideo.gender];
 
-  io.on('connection', function (socket) {
+    opn(gapi.oauth.generateAuthUrl({
+      access_type: "offline"
+      , scope: ["https://www.googleapis.com/auth/youtube.upload"]
+    }));
+    app.get('/oauth2callback', function (req, res) {
+      let code = req.query.code;
 
-    socket.on('start', function (video) {
+      Logger.log("Trying to get the token using the following code: " + code);
 
-      currentVideo = video
-      var image = currentVideo.video;
-      
-      fileReader();
-      fs.writeFile(__dirname + '/public/upload/image/tmp.jpg', video, function (err) {
-        if (err) throw err;
-      });
+      gapi.oauth.getToken(code, (err, tokens) => {
 
-      var file_values = [currentVideo.firstname, currentVideo.lastname, currentVideo.mobile, currentVideo.email,currentVideo.gender ];
-    
-console.log(file_values);
-      opn(gapi.oauth.generateAuthUrl({
-        access_type: "offline"
-        , scope: ["https://www.googleapis.com/auth/youtube.upload"]
-      }));
-      app.get('/oauth2callback', function (req, res) {
-        let code = req.query.code;
+        if (err) {
+          console.error(err)
+          res.status(500).send(err)
+          return Logger.log(err);
+        }
 
-        Logger.log("Trying to get the token using the following code: " + code);
+        Logger.log("Got the tokens.");
+        gapi.oauth.setCredentials(tokens);
 
-        gapi.oauth.getToken(code, (err, tokens) => {
+        res.send("The video is being uploaded successfully. The Magic Begins.......");
+        let req = Youtube.videos.insert({
+          resource: {
+            // Video title and description
+            snippet: {
+              title: currentVideo.title
+              , description: currentVideo.description
+            }
 
-          if (err) {
-            console.error(err)
-            res.status(500).send(err)
-            return Logger.log(err);
+            , status: {
+              privacyStatus: currentVideo.privacyStatus
+            }
           }
 
-          Logger.log("Got the tokens.");
-          gapi.oauth.setCredentials(tokens);
-          res.send("The video is being uploaded successfully. The Magic Begins.......");
-          let req = Youtube.videos.insert({
-            resource: {
-              // Video title and description
-              snippet: {
-                title: currentVideo.title
-                , description: currentVideo.description
-              }
+          // This is for the callback function
+          , part: "snippet,status"
 
-              , status: {
-                privacyStatus: currentVideo.privacyStatus
-              }
-            }
+          , media: {
+            body: content
+          }
+        }, (err, data) => {
+          if (data) {
+            socket.emit('done', currentVideo);
+            spinner.stop(true)
+            Logger.log('Done!')
+            console.log('\n Check your uploaded video using:\n https://www.youtube.com/watch?v=' + data.id);
+            videourl = 'https://www.youtube.com/watch?v=' + data.id;
 
-            // This is for the callback function
-            , part: "snippet,status"
+            databaseInsert(file_values, videourl, imgPath);
+            fileDelete(filePath);
 
-            , media: {
-              body: content
-            }
-          }, (err, data) => {
-            if (data) {
-              socket.emit('done', currentVideo);
-              spinner.stop(true)
-              Logger.log('Done!')
-              console.log('\n Check your uploaded video using:\n https://www.youtube.com/watch?v=' + data.id);
-              videourl = 'https://www.youtube.com/watch?v=' + data.id;
-              databaseInsert(file_values,videourl,imgPath);
-              fileDelete(filePath);
-              
-
-            }
-            if (err) {
-              console.error(err)
-            }
-          });
-          spinner.start();
+          }
+          if (err) {
+            console.error(err)
+          }
         });
+        spinner.start();
       });
-
     });
+
   });
-  
-  /*****************************************************
-   *             DATABASE OPERATIONS         *
-   ****************************************************/
-  function databaseInsert(file_values, videourl,imgPath) {
-    // open the database
-    ranId=uuidv4();
-    var user_id = ranId;
-    let db = new sqlite3.Database('./database/videopond.db', sqlite3.OPEN_READWRITE, (err) => {
-      if (err) {
-        console.error(err.message);
-      }
-      console.log('Connected to the videopond database.');
-    });
+});
 
-    var stmt = "INSERT INTO user_details(name,surname,mobile,email,gender,video_url,photo_url) VALUES('" + file_values[0] + "','" + file_values[1] + "','" + file_values[2] + "','" + file_values[3] + "','" + file_values[4] + "','" + videourl + "','" + imgPath + "')";
-    db.run(stmt, function (err) {
-      if (err) {
-        return console.log(err.message);
-      }
-    });
-    db.close();
-    console.log("Database operation successful");
-    flag = 'no_data';
-  }
+/*****************************************************
+ *             DATABASE OPERATIONS         *
+ ****************************************************/
+function databaseInsert(file_values, videourl, imgPath) {
+  
+  ranId = shortid.generate();
+  
+  //mqtt connection
+  var client  = mqtt.connect('mqtt://iot.eclipse.org')
+  client.on('connect', function () {
+    client.subscribe('presence')
+    client.publish('presence','user_id : '+ ranId+' youtube url : '+videourl)
+  })
+
+
+  client.on('message', function (topic, message) {
+    // message is Buffer
+    console.log("This is connection url");
+    console.log(message.toString());
+    client.end();
+  })
+  // random id generator
+
+
+  // open the database
+  
+  let db = new sqlite3.Database('./database/videopond.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) {
+      console.error(err.message);
+    }
+    console.log('Connected to the videopond database.');
+  });
+
+  var stmt = "INSERT INTO user_details(name,surname,mobile,email,gender,video_url,photo_url,user_id) VALUES('" + file_values[0] + "','" + file_values[1] + "','" + file_values[2] + "','" + file_values[3] + "','" + file_values[4] + "','" + videourl + "','" + imgPath + "','" + ranId + "')";
+  db.run(stmt, function (err) {
+    if (err) {
+      return console.log(err.message);
+    }
+  });
+  db.close();
+  console.log("Database operation successful");
+  flag = 'no_data';
+}

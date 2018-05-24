@@ -44,7 +44,7 @@
     /* change player background color */
 
     #myVideo {
-      background-color:cornflowerblue;
+      background-color: cornflowerblue;
     }
   </style>
 </head>
@@ -110,6 +110,7 @@
             <div class="col s6">
               <label>Privacy Settings</label>
               <select id="privacyStatus">
+                <option value="public">Unlisted</option>
                 <option value="private">Private</option>
                 <option value="public">Public</option>
               </select>
@@ -127,7 +128,7 @@
               <label for="icon_prefix">Mobile </label>
             </div>
 
-          
+
 
             <div class="col s6 upload-container">
               <button class="btn waves-effect waves-light publish" id='uploadButton' type="submit" name="action">Upload
@@ -202,8 +203,7 @@
               // the blob object contains the recorded data that
               // can be downloaded by the user, stored on server etc.
               var data = player.recordedData;
-              if(data === null && typeof data === "object")
-              {
+              if (data === null && typeof data === "object") {
                 alert('Record video');
                 return;
               }
@@ -264,8 +264,8 @@
         <div class="col l6 s12">
           <h5 class="white-text">Over 13 years we have developed big data and software solutions</h5>
           <p class="grey-text text-lighten-4 mission">
-            <a href="http://silverpond.com.au">We are a team of data scientists, machine learning specialists and software engineers who design solutions to hard problems. We love big data and turning blue-sky ideas into reality.
-              human potential -></a>
+            <a href="http://silverpond.com.au">We are a team of data scientists, machine learning specialists and software engineers who design solutions to
+              hard problems. We love big data and turning blue-sky ideas into reality. human potential -></a>
           </p>
         </div>
         <div class="col l4 offset-l2 s12">
