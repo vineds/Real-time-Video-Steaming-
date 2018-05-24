@@ -24,6 +24,7 @@ $(function () {
   function fileChosen(evnt) {
     selectedFile.video = evnt.target.files[0];
 
+    selectedFile.hid = hid.val();
     // Text filler for title and description if left empty
     defaultText = selectedFile.video.name.split('.').slice(0)[0];
   }
@@ -57,13 +58,40 @@ $(function () {
   fileBox.on('change', fileChosen);
 
   uploadButton.click(function (e) {
+    /*****************************************************
+     *               VALIDATION                       *
+     ****************************************************/
 
-    // Validate presence of file
+    
     if (selectedFile.video === undefined) {
       alert("Please select a file");
       return
     }
-   
+    if (document.getElementById("hid").value == "err") {
+      alert("Please record video");
+      return
+    }
+    if (document.getElementById("hid").value == "err") {
+
+
+      alert("Please record video");
+      return
+    }
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById("email").value)) {
+    }
+    else {
+      alert("You have entered an invalid email address!")
+      return
+
+    }
+    if (/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(document.getElementById("mobile").value)) {
+    }
+    else {
+      alert("You have entered an invalid Mobile!")
+      return
+    }
+
+
 
     addFileInfo();
     resetInputFields();

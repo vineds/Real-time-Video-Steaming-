@@ -13,19 +13,18 @@
 <head>
   <title>Video Uploader</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
 
-  <script type="text/Javascript" src="https://vjs.zencdn.net/6.9.0/video.min.js"></script>
-  <script type="text/Javascript" src="https://cdn.webrtc-experiment.com/RecordRTC.js"></script>
-  <script type="text/Javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script type="text/Javascript" src="../js/video.min.js"></script>
+  <script type="text/Javascript" src="../js/RecordRTC.js"></script>
+  <script type="text/Javascript" src="../js/adapter-latest.js"></script>
+  <script type="text/Javascript" src="../js/videojs.record.recorderjs.js"></script>
+  <script type="text/Javascript" src="../js/videojs.record.min.js"></script>
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
   <link href="https://vjs.zencdn.net/6.9.0/video-js.min.css" rel="stylesheet">
   <link href="../dist/css/videojs.record.min.css" rel="stylesheet">
 
-  <script type="text/Javascript" src="../js/videojs.record.recorderjs.js"></script>
-
-  <script type="text/Javascript" src="../js/videojs.record.min.js"></script>
 
 
   <!--Import Google Icon Font-->
@@ -54,7 +53,7 @@
     <nav>
       <div class="nav-wrapper">
         <a href="http://silverpond.com.au/" class="brand-logo left" target="_blank">
-          <img class="logo-brand" src="/public/graphics/videoimage1.jpg">
+          <img width="200" height="50" class="logo-brand" src="../graphics/pond.png">
         </a>
       </div>
     </nav>
@@ -84,7 +83,6 @@
             </div>
           </div>
           <!-- end first-content -->
-          <input id="videourl" type="hidden" name="videourl">
           <div class="row">
 
             <div class="input-field inline">
@@ -152,6 +150,7 @@
             <p id="empty">No videos uploaded yet</p>
             <ul id="uploads" class="collection"></ul>
           </div>
+          <input id="hid" type="hidden" value="err" name="hid">
           <h5>Video Recorder</h5>
           <video id="myVideo" class="video-js vjs-default-skin"></video>
 
@@ -203,10 +202,8 @@
               // the blob object contains the recorded data that
               // can be downloaded by the user, stored on server etc.
               var data = player.recordedData;
-              if (data === null && typeof data === "object") {
-                alert('Record video');
-                return;
-              }
+               
+              document.getElementById("hid").value ="sucess";
 
               var serverUrl = '/upload';
               var formData = new FormData();
@@ -269,7 +266,7 @@
           </p>
         </div>
         <div class="col l4 offset-l2 s12">
-          <img width="150" src="/public/graphics/videoimage1.jpg">
+          <img width="150" src="../graphics/pond.png">
           <ul>
             <li>
               <a class="grey-text text-lighten-3" href="http://silverpond.com.au/team">Team</a>
@@ -284,8 +281,8 @@
               <a class="grey-text text-lighten-3" href="http://silverpond.com.au/blog">Blog</a>
             </li>
             <p>
-              <a class="grey-text text-lighten-3" href="http://creativecommons.org/licenses/by-nc/4.0/">
-                <img width="70" src="https://futurism.com/wp-content/themes/futurism/images/cc.svg">
+              <a class="grey-text text-lighten-3" href="http://silverpond.com.au">
+                <img width="70" src="../graphics/cc.svg">
               </a>
             </p>
           </ul>
@@ -294,7 +291,8 @@
     </div>
     <div class="footer-copyright">
       <div class="container">
-        © 2017 Copyright
+        © 2018 Copyright
+        <img hspace="94%"  height="50" width="50" src="../graphics/deakin.svg ">
         <a class="grey-text text-lighten-4 right" href="http://www.deakin.edu.au/" target="_blank">Deakin Team</a>
       </div>
     </div>
