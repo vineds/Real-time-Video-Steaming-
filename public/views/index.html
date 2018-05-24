@@ -16,9 +16,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
 
-  <!--<script src="/lib/RecordRTC.js"></script>
-  <script src="/lib/adapter-latest.js"></script>-->
-
   <script type="text/Javascript" src="https://vjs.zencdn.net/6.9.0/video.min.js"></script>
   <script type="text/Javascript" src="https://cdn.webrtc-experiment.com/RecordRTC.js"></script>
   <script type="text/Javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
@@ -30,11 +27,6 @@
 
   <script type="text/Javascript" src="../js/videojs.record.min.js"></script>
 
-  <script>
-    // disable analytics tracking (note: used in vjs.zencdn.net CDN-hosted version
-    // of video.js only, see https://github.com/videojs/video.js#quick-start)
-    window.HELP_IMPROVE_VIDEOJS = false;
-  </script>
 
   <!--Import Google Icon Font-->
   <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -44,11 +36,15 @@
   <link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
 
 
+  <script>
+    window.HELP_IMPROVE_VIDEOJS = false;
+  </script>
+
   <style>
     /* change player background color */
 
     #myVideo {
-      background-color: #1a535c;
+      background-color:cornflowerblue;
     }
   </style>
 </head>
@@ -58,21 +54,21 @@
     <nav>
       <div class="nav-wrapper">
         <a href="http://silverpond.com.au/" class="brand-logo left" target="_blank">
-          <img class="logo-brand" src="https://futurism.com/wp-content/themes/futurism/images/futurismlogo.svg?v=3">
+          <img class="logo-brand" src="/public/graphics/videoimage1.jpg">
         </a>
       </div>
     </nav>
     <!-- end nav -->
   </div>
 
+
   <div class="container">
 
     <div class="row">
 
       <div class="col s12 m6">
-
         <div class="uploadBox">
-          <h3>Video Uploader</h3>
+          <h5>Image Uploader</h5>
 
           <div class="first-content row">
             <div class="file-field input-field">
@@ -80,10 +76,10 @@
                 <span>
                   <i class="material-icons">attach_file</i>
                 </span>
-                <input id="fileBox" type="file" accept="video/mp4,video/x-m4v,video/*">
+                <input id="fileBox" type="file" accept="images/*">
               </div>
               <div class="file-path-wrapper">
-                <input id="fileBoxLabel" class="file-path validate" type="text" placeholder="Upload a video file">
+                <input id="fileBoxLabel" class="file-path validate" type="text" placeholder="Upload your image">
               </div>
             </div>
           </div>
@@ -91,23 +87,31 @@
           <input id="videourl" type="hidden" name="videourl">
           <div class="row">
 
-            <div class="input-field col s12">
+            <div class="input-field inline">
               <i class="material-icons prefix">text_fields</i>
               <input id="firstname" id="icon_prefix" type="text" class="validate">
               <label for="icon_prefix">First Name </label>
             </div>
 
-            <div class="input-field col s12">
+            <div class="input-field inline">
               <i class="material-icons prefix">text_fields</i>
               <input id="lastname" id="icon_prefix" type="text" class="validate">
               <label for="icon_prefix">Last Name </label>
             </div>
 
-            <div class="input-field col s12">
+            <div class="col s6">
               <label>Gender</label>
               <select id="gender">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
+              </select>
+            </div>
+
+            <div class="col s6">
+              <label>Privacy Settings</label>
+              <select id="privacyStatus">
+                <option value="private">Private</option>
+                <option value="public">Public</option>
               </select>
             </div>
 
@@ -123,30 +127,7 @@
               <label for="icon_prefix">Mobile </label>
             </div>
 
-            <div class="input-field col s12">
-              <i class="material-icons prefix">text_fields</i>
-              <input id="title" id="icon_prefix" type="text" class="validate">
-              <label for="icon_prefix">Title </label>
-            </div>
-
-            <div class="input-field col s12">
-              <i class="material-icons prefix">mode_edit</i>
-              <textarea id="description" class="materialize-textarea validate"></textarea>
-              <label for="description">Description</label>
-            </div>
-
-          </div>
-          <!-- end row -->
-
-          <div class="row">
-
-            <div class="col s6">
-              <label>Privacy Settings</label>
-              <select id="privacyStatus">
-                <option value="private">Private</option>
-                <option value="public">Public</option>
-              </select>
-            </div>
+          
 
             <div class="col s6 upload-container">
               <button class="btn waves-effect waves-light publish" id='uploadButton' type="submit" name="action">Upload
@@ -159,7 +140,6 @@
 
         </div>
         <!-- end uploadBox -->
-
       </div>
       <!-- end col cols12 m6 -->
 
@@ -167,23 +147,16 @@
 
         <div id="recentUploads">
           <div class="first-content">
-            <h4>Videos Uploaded</h4>
+            <h5>Videos Uploaded</h5>
             <p id="empty">No videos uploaded yet</p>
             <ul id="uploads" class="collection"></ul>
           </div>
-          <!-- video recorder -->
-          <title>Record Your Video</title>
-          <h5>Preview Blob during Live Recording</h5>
-
-          <br>
-
+          <h5>Video Recorder</h5>
           <video id="myVideo" class="video-js vjs-default-skin"></video>
 
           <!--/***************************************************** * VIDEO RECORDER * ****************************************************/-->
 
-
           <script>
-            var 
             var options = {
               controls: true,
               width: 320,
@@ -196,7 +169,7 @@
                 record: {
                   audio: false,
                   video: true,
-                  maxLength: 5,
+                  maxLength: 10,
                   debug: true
                 }
               }
@@ -228,16 +201,53 @@
             player.on('finishRecord', function () {
               // the blob object contains the recorded data that
               // can be downloaded by the user, stored on server etc.
-              
-              document.getElementById("videourl").value = player.recordedData;
-              player.record().saveAs({'video': 'my-video-file-name.webm'});
+              var data = player.recordedData;
+              if(data === null && typeof data === "object")
+              {
+                alert('Record video');
+                return;
+              }
+
+              var serverUrl = '/upload';
+              var formData = new FormData();
+              formData.append('file', data, data.name);
+
+              console.log('uploading recording:', data.name);
+
+              fetch(serverUrl, {
+                method: 'POST',
+                body: formData
+              }).then(
+                success => console.log('recording upload complete.')
+              ).catch(
+                error => console.error('an upload error occurred!')
+              );
             });
+
           </script>
 
           <!-- video recorder ends -->
 
         </div>
         <!-- end recentUploads -->
+        <div class="row">
+
+          <div class="input-field col s12">
+            <i class="material-icons prefix">text_fields</i>
+            <input id="title" id="icon_prefix" type="text" class="validate">
+            <label for="icon_prefix">Title </label>
+          </div>
+
+          <div class="input-field col s12">
+            <i class="material-icons prefix">mode_edit</i>
+            <textarea id="description" class="materialize-textarea validate"></textarea>
+            <label for="description">Description</label>
+          </div>
+
+
+
+        </div>
+        <!-- end row -->
 
       </div>
       <!-- end cols12 m6 -->
@@ -252,26 +262,26 @@
     <div class="container">
       <div class="row">
         <div class="col l6 s12">
-          <h5 class="white-text">Over 200,000 people subscribe to our newsletter.</h5>
+          <h5 class="white-text">Over 13 years we have developed big data and software solutions</h5>
           <p class="grey-text text-lighten-4 mission">
-            <a href="https://futurism.com/about">Our mission is to empower our readers and drive the development of transformative technologies towards maximizing
+            <a href="http://silverpond.com.au">We are a team of data scientists, machine learning specialists and software engineers who design solutions to hard problems. We love big data and turning blue-sky ideas into reality.
               human potential -></a>
           </p>
         </div>
         <div class="col l4 offset-l2 s12">
-          <img width="150" src="https://futurism.com/wp-content/themes/futurism/images/futurismlogotaglinefooter.png">
+          <img width="150" src="/public/graphics/videoimage1.jpg">
           <ul>
             <li>
-              <a class="grey-text text-lighten-3" href="https://futurism.com/about">About</a>
+              <a class="grey-text text-lighten-3" href="http://silverpond.com.au/team">Team</a>
             </li>
             <li>
-              <a class="grey-text text-lighten-3" href="https://futurism.com/faq/">FAQ</a>
+              <a class="grey-text text-lighten-3" href="https://www.deeplearningworkshop.com.au/">Work Shops</a>
             </li>
             <li>
-              <a class="grey-text text-lighten-3" href="https://futurism.com/dmca-policy/">DMCA Policy</a>
+              <a class="grey-text text-lighten-3" href="http://silverpond.com.au/community">Community</a>
             </li>
             <li>
-              <a class="grey-text text-lighten-3" href="https://futurism.com/privacy/">Privacy Policy</a>
+              <a class="grey-text text-lighten-3" href="http://silverpond.com.au/blog">Blog</a>
             </li>
             <p>
               <a class="grey-text text-lighten-3" href="http://creativecommons.org/licenses/by-nc/4.0/">
@@ -290,7 +300,6 @@
     </div>
   </footer>
   <!-- end footer -->
-
 
   <!-- Javascript Imports -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

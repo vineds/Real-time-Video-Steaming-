@@ -1,22 +1,25 @@
 {
   "name": "dancing_web",
   "version": "1.0.0",
-  "description": "Simple app to create Dancing Skeleton",
+  "description": "Dancing Web Application",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Vineeth Damodaran",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "bug-killer": "^4.4.4",
     "cli-spinner": "^0.2.8",
     "express": "^4.16.3",
+    "file-system": "^2.2.2",
     "opn": "^4.0.2",
     "r-json": "^1.2.8",
     "recordrtc-nodejs": "^1.0.6",
     "socket.io": "^1.7.4",
     "sqlite3": "^4.0.0",
+    "uuid": "^3.2.1",
     "video.js": "^7.0.2",
     "videojs-record": "^2.3.0",
     "youtube-api": "^2.0.9"

@@ -12,7 +12,6 @@ $(function () {
     , gender = $('#gender')
     , email = $('#email')
     , mobile = $('#mobile')
-    , videourl = $('#a')
     , uploads = $('#uploads')
     , privacyStatus = $('#privacyStatus');
 
@@ -23,9 +22,7 @@ $(function () {
 
 
   function fileChosen(evnt) {
-    selectedFile.videourl = videourl.val();
     selectedFile.video = evnt.target.files[0];
-
 
     // Text filler for title and description if left empty
     defaultText = selectedFile.video.name.split('.').slice(0)[0];
@@ -38,7 +35,6 @@ $(function () {
     fileBox.wrap('<form>').closest('form').get(0).reset();
     fileBox.unwrap();
   }
-
 
   function addFileInfo() {
     selectedFile.firstname = firstname.val() || defaultText;
@@ -67,15 +63,14 @@ $(function () {
       alert("Please select a file");
       return
     }
+   
 
     addFileInfo();
     resetInputFields();
 
     // Emit event via socket.io
-    console.log(selectedFile.videourl)
     socket.emit('start', selectedFile);
     selectedFile.video = undefined;
-    selectedFile.videourl = undefined;
     return false;
   });
 

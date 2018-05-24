@@ -69,7 +69,6 @@ Once all dependencies have been installed, initiate the app by running:
 node app.js
 ```
 
-*Enjoy!!*
 
 ## Contributing Bugfixes or Features
 
@@ -84,7 +83,6 @@ Committing code is easy:
 - Commit a change, and push your local branch to your github fork
 - Send me pull request for your changes to be included
 
-I apologize in advance for the slow action on pull requests and issues.
 
 ## License
 Youtube Uploader is licensed under the MIT license. (http://opensource.org/licenses/MIT)
