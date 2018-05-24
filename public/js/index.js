@@ -32,6 +32,10 @@ $(function () {
   function resetInputFields() {
     title.val('').removeClass('valid')
     description.val('').removeClass('valid');
+    firstname.val('').removeClass('valid')
+    lastname.val('').removeClass('valid');
+    email.val('').removeClass('valid')
+    mobile.val('').removeClass('valid');
     fileBoxLabel.val('').removeClass('valid');
     fileBox.wrap('<form>').closest('form').get(0).reset();
     fileBox.unwrap();
@@ -61,22 +65,22 @@ $(function () {
     /*****************************************************
      *               VALIDATION                       *
      ****************************************************/
+    var x = document.getElementById("firstname").value;
+    var y = document.getElementById("lastname").value;
+    var t = document.getElementById("title").value;
+    var d = document.getElementById("description").value;
 
-    
-    if (selectedFile.video === undefined) {
-      alert("Please select a file");
-      return
+    if (x == "") {
+      alert("First Name must be filled out");
+      return;
     }
-    if (document.getElementById("hid").value == "err") {
-      alert("Please record video");
-      return
+    if (y == "") {
+      alert("Last Name must be filled out");
+      return;
     }
-    if (document.getElementById("hid").value == "err") {
+   
 
 
-      alert("Please record video");
-      return
-    }
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById("email").value)) {
     }
     else {
@@ -91,6 +95,23 @@ $(function () {
       return
     }
 
+    if (selectedFile.video === undefined) {
+      alert("Please select a file");
+      return
+    }
+    if (document.getElementById("hid").value == "err") {
+      alert("Please record video");
+      return
+    }
+
+    if (t == "") {
+      alert("Provide a  Video Title");
+      return;
+    }
+    if (d == "") {
+      alert("Provide a  Video Description as well");
+      return;
+    }
 
 
     addFileInfo();

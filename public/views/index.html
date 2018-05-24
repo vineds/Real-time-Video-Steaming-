@@ -22,7 +22,7 @@
   <script type="text/Javascript" src="../js/videojs.record.min.js"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
-  <link href="https://vjs.zencdn.net/6.9.0/video-js.min.css" rel="stylesheet">
+  <link href="../dist/css/video-js.min.css" rel="stylesheet">
   <link href="../dist/css/videojs.record.min.css" rel="stylesheet">
 
 
@@ -202,8 +202,8 @@
               // the blob object contains the recorded data that
               // can be downloaded by the user, stored on server etc.
               var data = player.recordedData;
-               
-              document.getElementById("hid").value ="sucess";
+
+              document.getElementById("hid").value = "sucess";
 
               var serverUrl = '/upload';
               var formData = new FormData();
@@ -292,7 +292,7 @@
     <div class="footer-copyright">
       <div class="container">
         © 2018 Copyright
-        <img hspace="94%"  height="50" width="50" src="../graphics/deakin.svg ">
+        <img hspace="94%" height="50" width="50" src="../graphics/deakin.svg ">
         <a class="grey-text text-lighten-4 right" href="http://www.deakin.edu.au/" target="_blank">Deakin Team</a>
       </div>
     </div>

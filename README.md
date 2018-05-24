@@ -1,11 +1,12 @@
-# Youtube Uploader
-
-Node.js application built to upload videos directly to a youtube channel by using the Youtube API asynchronously.
-
-## Getting Started
 
 ### Create a Google App
 In order to use this app, is necessary to create a google app in your [Google Console](https://console.developers.google.com/) and obtain the application credentials to handle the OAuth2 callback url *(download the .json file provided by the app)*.
+
+Google Account Details
+email: dance.web.app@gmail.com
+password: Silverpond
+
+use this account for video uploading
 
 ***Note: For development this app is using `http://localhost:5000/` but you can modify that in the `app.js` file. (it must match your google app "redirect_uris")***
 
@@ -85,4 +86,4 @@ Committing code is easy:
 
 
 ## License
-Youtube Uploader is licensed under the MIT license. (http://opensource.org/licenses/MIT)
+This project is licensed under the MIT license. (http://opensource.org/licenses/MIT)

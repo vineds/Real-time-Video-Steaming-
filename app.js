@@ -20,6 +20,8 @@ var imgPath = '/public/upload/image/tmp.mp4';
 var ranId;
 var shortid = require('shortid');
 var mqtt = require('mqtt')
+var client;
+
 
 
 /*****************************************************
@@ -76,6 +78,7 @@ io.on('connection', function (socket) {
 
     currentVideo = video
     var image = currentVideo.video;
+    ranId = shortid.generate();
 
     fileReader();
     fs.writeFile(__dirname + '/public/upload/image/tmp.jpg', video, function (err) {
@@ -104,7 +107,10 @@ io.on('connection', function (socket) {
         Logger.log("Got the tokens.");
         gapi.oauth.setCredentials(tokens);
 
-        res.send("The video is being uploaded successfully. The Magic Begins.......");
+
+
+
+
         let req = Youtube.videos.insert({
           resource: {
             // Video title and description
@@ -132,8 +138,38 @@ io.on('connection', function (socket) {
             console.log('\n Check your uploaded video using:\n https://www.youtube.com/watch?v=' + data.id);
             videourl = 'https://www.youtube.com/watch?v=' + data.id;
 
-            databaseInsert(file_values, videourl, imgPath);
+            databaseInsert(file_values, videourl, imgPath, ranId);
             fileDelete(filePath);
+
+            // To complete this part client needs to establish connection
+            //mqtt connection
+            //client.on('connect', function () {
+            // client.subscribe('video_pond/response')
+            // client.publish('video_pond/request', '(url ' + ranId + ' ' + videourl + ')')
+            //})
+
+            client = mqtt.connect('mqtt://iot.eclipse.org')
+            client.on('connect', function () {
+              client.subscribe('presence')
+              client.publish('presence', '(url ' + ranId + ' ' + videourl + ')')
+            })
+
+            client.on('message', function (topic, message) {
+              // message is Buffer
+              var strgg, url, u_id;
+              strgg = message.toString();
+              url = strgg.substr(15, 43)
+              u_id = strgg.substr(5, 10)
+
+              var n = u_id.localeCompare(ranId);
+              if (n = '1') {
+                res.redirect(url);
+
+              }
+              client.end();
+            })
+
+            //res.send("The video is being uploaded successfully. The Magic Begins.......");
 
           }
           if (err) {
@@ -142,6 +178,8 @@ io.on('connection', function (socket) {
         });
         spinner.start();
       });
+
+
     });
 
   });
@@ -150,29 +188,12 @@ io.on('connection', function (socket) {
 /*****************************************************
  *             DATABASE OPERATIONS         *
  ****************************************************/
-function databaseInsert(file_values, videourl, imgPath) {
-  
-  ranId = shortid.generate();
-  
-  //mqtt connection
-  var client  = mqtt.connect('mqtt://iot.eclipse.org')
-  client.on('connect', function () {
-    client.subscribe('presence')
-    client.publish('presence','user_id : '+ ranId+' youtube url : '+videourl)
-  })
-
-
-  client.on('message', function (topic, message) {
-    // message is Buffer
-    console.log("This is connection url");
-    console.log(message.toString());
-    client.end();
-  })
+function databaseInsert(file_values, videourl, imgPath, ranId) {
   // random id generator
 
 
   // open the database
-  
+
   let db = new sqlite3.Database('./database/videopond.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) {
       console.error(err.message);
