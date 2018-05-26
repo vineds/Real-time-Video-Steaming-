@@ -1,12 +1,6 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.adapter = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-    /*
-     *  Copyright (c) 2017 The WebRTC project authors. All Rights Reserved.
-     *
-     *  Use of this source code is governed by a BSD-style license
-     *  that can be found in the LICENSE file in the root of the source
-     *  tree.
-     */
-     /* eslint-env node */
+   
+
     'use strict';
     
     var SDPUtils = require('sdp');
@@ -77,11 +71,6 @@
       return sdp;
     }
     
-    // Edge does not like
-    // 1) stun: filtered after 14393 unless ?transport=udp is present
-    // 2) turn: that does not have all of turn:host:port?transport=udp
-    // 3) turn: with ipv6 addresses
-    // 4) turn: occurring muliple times
     function filterIceServers(iceServers, edgeVersion) {
       var hasTurn = false;
       iceServers = JSON.parse(JSON.stringify(iceServers));
@@ -173,7 +162,6 @@
               return false;
             });
             // FIXME: also need to determine .parameters
-            //  see https://github.com/openpeer/ortc/issues/569
             break;
           }
         }
@@ -230,7 +218,6 @@
     function makeError(name, description) {
       var e = new Error(description);
       e.name = name;
-      // legacy error codes from https://heycam.github.io/webidl/#idl-DOMException-error-names
       e.code = {
         NotSupportedError: 9,
         InvalidStateError: 11,
@@ -242,7 +229,6 @@
     }
     
     module.exports = function(window, edgeVersion) {
-      // https://w3c.github.io/mediacapture-main/#mediastream
       // Helper function to add the track to the stream and
       // dispatch the event ourselves.
       function addTrackToStreamAndFireEvent(track, stream) {
@@ -389,7 +375,6 @@
       };
     
       // internal helper to create a transceiver object.
-      // (which is not yet the same as the WebRTC 1.0 transceiver)
       RTCPeerConnection.prototype._createTransceiver = function(kind, doNotAdd) {
         var hasBundleTransport = this.transceivers.length > 0;
         var transceiver = {
@@ -4165,7 +4150,6 @@
         }
     
         // ORTC defines the DTMF sender a bit different.
-        // https://github.com/w3c/ortc/issues/714
         if (window.RTCRtpSender && !('dtmf' in window.RTCRtpSender.prototype)) {
           Object.defineProperty(window.RTCRtpSender.prototype, 'dtmf', {
             get: function() {
@@ -4181,7 +4165,6 @@
           });
         }
         // Edge currently only implements the RTCDtmfSender, not the
-        // RTCDTMFSender alias. See http://draft.ortc.org/#rtcdtmfsender2*
         if (window.RTCDtmfSender && !window.RTCDTMFSender) {
           window.RTCDTMFSender = window.RTCDtmfSender;
         }
@@ -4197,7 +4180,6 @@
         window.RTCPeerConnection.prototype = RTCPeerConnectionShim.prototype;
       },
       shimReplaceTrack: function(window) {
-        // ORTC has replaceTrack -- https://github.com/w3c/ortc/issues/614
         if (window.RTCRtpSender &&
             !('replaceTrack' in window.RTCRtpSender.prototype)) {
           window.RTCRtpSender.prototype.replaceTrack =
@@ -4207,22 +4189,9 @@
     };
     
     },{"../utils":14,"./filtericeservers":9,"./getusermedia":10,"rtcpeerconnection-shim":1}],9:[function(require,module,exports){
-    /*
-     *  Copyright (c) 2018 The WebRTC project authors. All Rights Reserved.
-     *
-     *  Use of this source code is governed by a BSD-style license
-     *  that can be found in the LICENSE file in the root of the source
-     *  tree.
-     */
-     /* eslint-env node */
     'use strict';
     
     var utils = require('../utils');
-    // Edge does not like
-    // 1) stun: filtered after 14393 unless ?transport=udp is present
-    // 2) turn: that does not have all of turn:host:port?transport=udp
-    // 3) turn: with ipv6 addresses
-    // 4) turn: occurring muliple times
     module.exports = function(iceServers, edgeVersion) {
       var hasTurn = false;
       iceServers = JSON.parse(JSON.stringify(iceServers));
@@ -4258,14 +4227,6 @@
     };
     
     },{"../utils":14}],10:[function(require,module,exports){
-    /*
-     *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
-     *
-     *  Use of this source code is governed by a BSD-style license
-     *  that can be found in the LICENSE file in the root of the source
-     *  tree.
-     */
-     /* eslint-env node */
     'use strict';
     
     // Expose public methods.
@@ -4283,7 +4244,6 @@
         };
       };
     
-      // getUserMedia error shim.
       var origGetUserMedia = navigator.mediaDevices.getUserMedia.
           bind(navigator.mediaDevices);
       navigator.mediaDevices.getUserMedia = function(c) {
@@ -4294,14 +4254,6 @@
     };
     
     },{}],11:[function(require,module,exports){
-    /*
-     *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
-     *
-     *  Use of this source code is governed by a BSD-style license
-     *  that can be found in the LICENSE file in the root of the source
-     *  tree.
-     */
-     /* eslint-env node */
     'use strict';
     
     var utils = require('../utils');
@@ -4575,7 +4527,6 @@
     
       shimRTCDataChannel: function(window) {
         // rename DataChannel to RTCDataChannel (native fix in FF60):
-        // https://bugzilla.mozilla.org/show_bug.cgi?id=1173851
         if (window.DataChannel && !window.RTCDataChannel) {
           window.RTCDataChannel = window.DataChannel;
         }
@@ -4583,14 +4534,6 @@
     };
     
     },{"../utils":14,"./getusermedia":12}],12:[function(require,module,exports){
-    /*
-     *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
-     *
-     *  Use of this source code is governed by a BSD-style license
-     *  that can be found in the LICENSE file in the root of the source
-     *  tree.
-     */
-     /* eslint-env node */
     'use strict';
     
     var utils = require('../utils');
@@ -4794,13 +4737,6 @@
     };
     
     },{"../utils":14}],13:[function(require,module,exports){
-    /*
-     *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
-     *
-     *  Use of this source code is governed by a BSD-style license
-     *  that can be found in the LICENSE file in the root of the source
-     *  tree.
-     */
     'use strict';
     var utils = require('../utils');
     
@@ -5104,34 +5040,16 @@
     };
     
     },{"../utils":14}],14:[function(require,module,exports){
-    /*
-     *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
-     *
-     *  Use of this source code is governed by a BSD-style license
-     *  that can be found in the LICENSE file in the root of the source
-     *  tree.
-     */
-     /* eslint-env node */
     'use strict';
     
     var logDisabled_ = true;
     var deprecationWarnings_ = true;
     
-    /**
-     * Extract browser version out of the provided user agent string.
-     *
-     * @param {!string} uastring userAgent string.
-     * @param {!string} expr Regular expression used as match criteria.
-     * @param {!number} pos position in the version string to be returned.
-     * @return {!number} browser version.
-     */
     function extractVersion(uastring, expr, pos) {
       var match = uastring.match(expr);
       return match && match.length >= pos && parseInt(match[pos], 10);
     }
     
-    // Wraps the peerconnection event eventNameToWrap in a function
-    // which returns the modified event object.
     function wrapPeerConnectionEvent(window, eventNameToWrap, wrapper) {
       if (!window.RTCPeerConnection) {
         return;
@@ -5197,10 +5115,6 @@
             'adapter.js logging enabled';
       },
     
-      /**
-       * Disable or enable deprecation warnings
-       * @param {!boolean} bool set to true to disable warnings.
-       */
       disableWarnings: function(bool) {
         if (typeof bool !== 'boolean') {
           return new Error('Argument type: ' + typeof bool +
